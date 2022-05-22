@@ -5,18 +5,26 @@ export class Contact extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: 'naddo',
       password: 'swordfish',
-      authorized: false
+      authorized: false,
+      errorMessage: ''
     };
     this.authorize = this.authorize.bind(this);
   }
 
+  // event handler function
   authorize(e) {
+    e.preventDefault();     // prevent form submission upon page load
+    const username = e.target.querySelector('#username').value;
     const password = e.target.querySelector('input[type="password"]').value;
-    const auth = password == this.state.password;   // == comparison operator
+    const auth = password == this.state.password && username == this.state.username;   // == comparison operator
+
+    const message = auth ? '' : 'Error. Please try again.'
     // auth - store true or false depends on input password equals to current state password (swordfish)
     this.setState({
-      authorized: auth
+      authorized: auth,
+      errorMessage: message
     });
   }
 
@@ -37,7 +45,8 @@ export class Contact extends React.Component {
 
     const login = (
       <form onSubmit={this.authorize}>
-        <input id="password" type="password" />
+        <input id="username" placeholder="username" />
+        <input id="password" type="password" placeholder="password" />
         <input type="submit" />
       </form>
     )
@@ -46,6 +55,7 @@ export class Contact extends React.Component {
       <div id="authorization">
         <h1>{this.state.authorized ? 'Contact' : 'Login'}</h1>
         {this.state.authorized ? contactInfo : login}
+        {this.state.errorMessage}
       </div>
     );
   }
